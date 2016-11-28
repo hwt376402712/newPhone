@@ -334,7 +334,7 @@ public class NewPhoneActivity extends BaseSwipeBackActivity implements OnDismiss
                         os.writeBytes("mkdir " + now + "\n");
 
                         os.writeBytes("cp -r /data/data/" + mCacheListItem.get(i).getPackageName() + "  /data/newPhoneData/" + now + "\n");
-
+                        os.writeBytes("rm -rf /data/data/"+ mCacheListItem.get(i).getPackageName()+"/*"+ "\n");
 
                         os.writeBytes("exit\n");
                         os.flush();
@@ -350,14 +350,14 @@ public class NewPhoneActivity extends BaseSwipeBackActivity implements OnDismiss
                         } catch (Exception e) {
                         }
                     }
-
-
 //
-                    File file = new File("/data/data/" + mCacheListItem.get(i).getPackageName());
-                    Log.d("tt", file.getPath());
-
-
-                    deleteAll(file, process, file.getPath());
+//
+////
+//                    File file = new File("/data/data/" + mCacheListItem.get(i).getPackageName());
+//                    Log.d("tt", file.getPath());
+//
+//
+//                    deleteAll(file, process, file.getPath());
 
 
                 }

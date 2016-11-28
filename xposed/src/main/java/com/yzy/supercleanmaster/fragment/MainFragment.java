@@ -180,12 +180,21 @@ public class MainFragment extends BaseFragment {
 
     @OnClick(R.id.clearBtn)
     void clear() {
-        String imei=((TelephonyManager)MainFragment.this.getContext().getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
-        Toast.makeText(MainFragment.this.getContext(),imei,Toast.LENGTH_SHORT).show();
+
 
         startActivity(NewPhoneActivity.class);
 
     }
+
+    @OnClick(R.id.arc_process)
+    void showTest() {
+        String imei=((TelephonyManager)MainFragment.this.getContext().getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
+        Toast.makeText(MainFragment.this.getContext(),imei,Toast.LENGTH_SHORT).show();
+
+    }
+
+
+
 
 
     @Override

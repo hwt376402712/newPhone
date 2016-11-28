@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
+import android.bluetooth.BluetoothAdapter;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,11 +12,15 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.telephony.TelephonyManager;
 import android.text.format.Formatter;
 import android.util.Log;
 import android.view.MenuItem;
@@ -36,6 +41,8 @@ import com.etiennelawlor.quickreturn.library.enums.QuickReturnType;
 import com.etiennelawlor.quickreturn.library.listeners.QuickReturnListViewOnScrollListener;
 import com.nhaarman.listviewanimations.appearance.simple.SwingBottomInAnimationAdapter;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCallback;
+import com.utils.Base64Coder;
+import com.utils.RandomUtil;
 import com.yzy.supercleanmaster.R;
 import com.yzy.supercleanmaster.adapter.NewPhoneAdapter;
 import com.yzy.supercleanmaster.adapter.RublishMemoryAdapter;
@@ -51,17 +58,21 @@ import com.yzy.supercleanmaster.widget.textcounter.CounterView;
 import com.yzy.supercleanmaster.widget.textcounter.formatters.DecimalFormatter;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import butterknife.InjectView;
@@ -279,7 +290,7 @@ public class NewPhoneActivity extends BaseSwipeBackActivity implements OnDismiss
                 new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface dialog, int which) {
-                        now = inputServer.getText().toString();
+                        now = inputServer.getText().toString()+new SimpleDateFormat("yyyy-MM-dd").format(new Date());
                         //开始清除数据并备份选中数据
                         showProgressBar(true);
                         mProgressBarText.setText("正在备份数据...");
@@ -310,9 +321,48 @@ public class NewPhoneActivity extends BaseSwipeBackActivity implements OnDismiss
                     Set<String> s=sh.getStringSet("copyLog",new HashSet<String>());
                     s.add(now);
                     pre.putStringSet("copyLog",s);
+                    //记录设备当前标识
+
+                    TelephonyManager telManager=    ((TelephonyManager) getSystemService(TELEPHONY_SERVICE));
+                    WifiManager wifi = (WifiManager) getBaseContext().getSystemService(Context.WIFI_SERVICE);
+                    BluetoothAdapter blue=  BluetoothAdapter.getDefaultAdapter();
+                    WifiInfo info = wifi.getConnectionInfo();
+                    String imei=telManager.getDeviceId();
+                    String subId=telManager.getSubscriberId();
+                    String lineId=telManager.getLine1Number();
+                    String simId=telManager.getSimSerialNumber();
+                    String macId=info.getMacAddress();
+                    String blueId= blue.getAddress();
+                    String androidId = Settings.System.getString(getContentResolver(), Settings.System.ANDROID_ID);
+
+
+                    Map map=new HashMap();
+                    map.put("imei",imei);
+                    map.put("subId",subId);
+                    map.put("lineId",lineId);
+                    map.put("simId",simId);
+                    map.put("macId",macId);
+                    map.put("blueId",blueId);
+                    map.put("androidId",androidId);
+
+                    try {
+                        //将map转换为byte[]
+                        ByteArrayOutputStream toByte = new ByteArrayOutputStream();
+                        ObjectOutputStream oos = null;
+                        oos = new ObjectOutputStream(toByte);
+                        oos.writeObject(map);
+//对byte[]进行Base64编码
+                        String payCityMapBase64 = new String(Base64Coder.encode(toByte.toByteArray()));
+                        pre.putString(now, payCityMapBase64);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     pre.apply();
 
 
+
+
+                    //设备授权
                     Process process = null;
                     DataOutputStream os = null;
                     try {
@@ -347,6 +397,20 @@ public class NewPhoneActivity extends BaseSwipeBackActivity implements OnDismiss
                                 os.close();
                             }
                             process.destroy();
+
+                            //设置新的设备标识
+                            SharedPreferences sp = getBaseContext().getSharedPreferences("prefs", Context.MODE_WORLD_READABLE);
+                            SharedPreferences.Editor edit = sp.edit();
+                            edit.putString("imei",RandomUtil.randomNum(20));
+                            edit.putString("subId",RandomUtil.randomNum(15));
+                            edit.putString("lineId",RandomUtil.randomPhone());
+                            edit.putString("simId",RandomUtil.randomNum(20));
+                            edit.putString("macId",RandomUtil.randomMac());
+                            edit.putString("blueId",RandomUtil.randomMac1());
+                            edit.putString("androidId",RandomUtil.randomABC(16));
+                            edit.apply();
+
+
                         } catch (Exception e) {
                         }
                     }

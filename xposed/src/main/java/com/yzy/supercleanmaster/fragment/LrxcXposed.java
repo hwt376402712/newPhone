@@ -6,6 +6,8 @@ import android.net.wifi.WifiInfo;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
+import com.utils.RandomUtil;
+
 import java.util.Random;
 
 import de.robv.android.xposed.IXposedHookLoadPackage;
@@ -22,19 +24,20 @@ public class LrxcXposed implements IXposedHookLoadPackage {
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
         //获得Sharedpreference保存的数据
-        XSharedPreferences pre = new XSharedPreferences("com.yzy.supercleanmaster", "prefs");
         Log.d("pre", "初始化xposed成功");
+      final  XSharedPreferences pre = new XSharedPreferences("com.yzy.supercleanmaster", "prefs");
+
         HookMethod(TelephonyManager.class, "getDeviceId",
-                randomNum(20));
+                pre.getString("imei",RandomUtil.randomNum(20)));
 
-        HookMethod(TelephonyManager.class, "getSubscriberId", randomNum(15));
-        HookMethod(TelephonyManager.class, "getLine1Number", randomPhone());
+        HookMethod(TelephonyManager.class, "getSubscriberId", pre.getString("subId",RandomUtil.randomNum(15)));
+        HookMethod(TelephonyManager.class, "getLine1Number",pre.getString("lineId",RandomUtil.randomPhone()));
         HookMethod(TelephonyManager.class, "getSimSerialNumber",
-                randomNum(20));
-        HookMethod(WifiInfo.class, "getMacAddress", randomMac());
-        HookMethod(BluetoothAdapter.class, "getAddress",  randomMac1());
+                pre.getString("simId",RandomUtil.randomNum(20)));
+        HookMethod(WifiInfo.class, "getMacAddress", pre.getString("macId",RandomUtil.randomMac()));
+        HookMethod(BluetoothAdapter.class, "getAddress", pre.getString("blueId",RandomUtil.randomMac1()));
 
-           XposedHelpers.findField(android.os.Build.class, "SERIAL").set(null,  randomNum(19)+"a");
+           XposedHelpers.findField(android.os.Build.class, "SERIAL").set(null,  RandomUtil.randomNum(19)+"a");
 //            XposedHelpers.findField(android.os.Build.class, "BRAND").set(null,  randomNum(15));
 
         try
@@ -49,7 +52,7 @@ public class LrxcXposed implements IXposedHookLoadPackage {
                                 {
                                     if (param.args[1] == "android_id")
                                     {
-                                        param.setResult(randomABC(16));
+                                        param.setResult( pre.getString("androidId",RandomUtil.randomABC(16)));
                                     }
 
                                 }
@@ -60,10 +63,6 @@ public class LrxcXposed implements IXposedHookLoadPackage {
             Log.d("tt","修改androidId失败"+e.getMessage());
         }
 
-
-
-        String imei = pre.getString("imei", null);
-        Log.d("pre", "handleLoadPackage() returned: " + imei);
     }
 
     private void HookMethod(final Class cl, final String method,
@@ -82,84 +81,6 @@ public class LrxcXposed implements IXposedHookLoadPackage {
     }
 
 
-    private String randomNum(int n)
-    {
-        String res = "";
-        Random rnd = new Random();
-        for (int i = 0; i < n; i++)
-        {
-            res = res + rnd.nextInt(10);
-        }
-        return res;
-    }
-
-
-    private String randomPhone()
-    {
-        /** 前三为 */
-        String head[] = { "+8613", "+8615", "+8617", "+8618", "+8616" };
-        Random rnd = new Random();
-        String res = head[rnd.nextInt(head.length)];
-        for (int i = 0; i < 9; i++)
-        {
-            res = res + rnd.nextInt(10);
-        }
-        return res;
-    }
-
-    private String randomMac()
-    {
-        String chars = "abcde0123456789";
-        String res = "";
-        Random rnd = new Random();
-        int leng = chars.length();
-        for (int i = 0; i < 17; i++)
-        {
-            if (i % 3 == 2)
-            {
-                res = res + ":";
-            } else
-            {
-                res = res + chars.charAt(rnd.nextInt(leng));
-            }
-
-        }
-        return res;
-    }
-
-    private String randomMac1()
-    {
-        String chars = "ABCDE0123456789";
-        String res = "";
-        Random rnd = new Random();
-        int leng = chars.length();
-        for (int i = 0; i < 17; i++)
-        {
-            if (i % 3 == 2)
-            {
-                res = res + ":";
-            } else
-            {
-                res = res + chars.charAt(rnd.nextInt(leng));
-            }
-
-        }
-        return res;
-    }
-
-    private String randomABC(int n)
-    {
-        String chars = "abcde0123456789";
-        String res = "";
-        Random rnd = new Random();
-        int leng = chars.length();
-        for (int i = 0; i < n; i++)
-        {
-            res = res + chars.charAt(rnd.nextInt(leng));
-
-        }
-        return res;
-    }
 
 
 

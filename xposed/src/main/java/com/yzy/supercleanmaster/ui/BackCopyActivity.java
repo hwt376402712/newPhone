@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
@@ -16,13 +17,17 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.utils.Base64Coder;
 import com.yzy.supercleanmaster.R;
 
+import java.io.ByteArrayInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import butterknife.InjectView;
@@ -154,6 +159,33 @@ public class BackCopyActivity extends Activity {
                 os.writeBytes("exit\n");
                 os.flush();
                 process.waitFor();
+
+                //恢复设备标识
+                SharedPreferences sh = getBaseContext().getSharedPreferences("copy", Context.MODE_WORLD_READABLE);
+                byte[] base64Bytes = Base64Coder.decode(sh.getString(text, null));
+                ByteArrayInputStream bais = new ByteArrayInputStream(base64Bytes);
+                ObjectInputStream ois = new ObjectInputStream(bais);
+                Map map = (Map) ois.readObject();
+                String imei=map.get("imei").toString();
+                String subId=map.get("subId").toString();
+                String lineId=map.get("lineId").toString();
+                String simId=map.get("simId").toString();
+                String macId=map.get("macId").toString();
+                String blueId= map.get("blueId").toString();
+                String androidId = map.get("androidId").toString();
+                SharedPreferences sp = getBaseContext().getSharedPreferences("prefs", Context.MODE_WORLD_READABLE);
+                SharedPreferences.Editor pre = sp.edit();
+                pre.putString("imei",imei);
+                pre.putString("subId",subId);
+                pre.putString("lineId",lineId);
+                pre.putString("simId",simId);
+                pre.putString("macId",macId);
+                pre.putString("blueId",blueId);
+                pre.putString("androidId",androidId);
+                pre.apply();
+
+
+
             } catch (Exception e) {
 
             }finally {

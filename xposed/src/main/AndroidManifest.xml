@@ -198,7 +198,7 @@
             android:value="Easy example which makes the status bar clock red and adds a smiley" />
         <meta-data
             android:name="xposedminversion"
-            android:value="53" />
+            android:value="54" />
     </application>
 
 </manifest>

@@ -32,12 +32,10 @@ public class LrxcXposed implements IXposedHookLoadPackage {
 
         HookMethod(TelephonyManager.class, "getSubscriberId", pre.getString("subId",RandomUtil.randomNum(15)));
         HookMethod(TelephonyManager.class, "getLine1Number",pre.getString("lineId",RandomUtil.randomPhone()));
-        HookMethod(TelephonyManager.class, "getSimSerialNumber",
-                pre.getString("simId",RandomUtil.randomNum(20)));
+        HookMethod(TelephonyManager.class, "getSimSerialNumber",pre.getString("simId",RandomUtil.randomNum(20)));
         HookMethod(WifiInfo.class, "getMacAddress", pre.getString("macId",RandomUtil.randomMac()));
         HookMethod(BluetoothAdapter.class, "getAddress", pre.getString("blueId",RandomUtil.randomMac1()));
-
-           XposedHelpers.findField(android.os.Build.class, "SERIAL").set(null,  RandomUtil.randomNum(19)+"a");
+        XposedHelpers.findField(android.os.Build.class, "SERIAL").set(null,  RandomUtil.randomNum(19)+"a");
 //            XposedHelpers.findField(android.os.Build.class, "BRAND").set(null,  randomNum(15));
 
         try

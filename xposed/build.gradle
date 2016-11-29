@@ -27,7 +27,7 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.jakewharton:butterknife:6.0.0'
     compile 'com.nhaarman.listviewanimations:lib-core:3.1.0@aar'
@@ -53,5 +53,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     provided 'de.robv.android.xposed:api:82'
     provided 'de.robv.android.xposed:api:82:sources'
-    provided files('libs/XposedBridgeApi-54.jar')
+    provided files('xplibs/XposedBridgeApi-54.jar')
 }

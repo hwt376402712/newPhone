@@ -156,6 +156,8 @@ public class CoreService extends Service {
             ApplicationInfo appInfo = null;
             AppProcessInfo abAppProcessInfo = null;
 
+            int currentapiVersion=android.os.Build.VERSION.SDK_INT;
+
             List<AndroidAppProcess> appProcessList = ProcessManager
                     .getRunningAppProcesses();
             publishProgress(0, appProcessList.size());

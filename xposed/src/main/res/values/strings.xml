@@ -18,7 +18,7 @@
     <string name="scanning">扫描中…</string>
     <string name="scanning_m_of_n">扫描中 %1$d/%2$d</string>
     <string name="software_top_text">已安装%1$s款软件,占有存储空间%2$s</string>
-
+    <string name="line">line</string>
 
     <string name="category_other">其他</string>
     <string name="category_def">常规设置</string>

@@ -27,10 +27,27 @@
     <color name="red_200">#EF9A9A</color>
     <color name="blue_500">#2196F3</color>
     <color name="blue_200">#90CAF9</color>
+    <color name="bbutton_info_edge">#ff46b8da</color>
+
+
+    <color name="bg_white">#FFFFFF</color>
+    <color name="bbutton_danger">#ffd9534f</color>
+    <color name="bbutton_danger_edge">#ffd43f3a</color>
+    <color name="bbutton_danger_pressed">#ffd2322d</color>
+    <color name="bbutton_danger_pressed_edge">#ffac2925</color>
+    <color name="bbutton_danger_disabled">#a5d9534f</color>
+    <color name="bbutton_danger_disabled_edge">#a5d43f3a</color>
+
+    <color name="bbutton_info">#ff5bc0de</color>
+
+    <color name="bbutton_info_pressed_edge">#ff269abc</color>
+    <color name="bbutton_info_disabled">#a55bc0de</color>
+    <color name="bbutton_info_disabled_edge">#a546b8da</color>
+
 
     <color name="background_tab_pressed">#ffffff</color>
     <color name="green_6a">#FF2c5aa9</color>
-
+    <color name="bbutton_info_pressed">#ff39b3d7</color>
     <color name="gplus_color_1">#3e802f</color>
     <color name="gplus_color_2">#f4b400</color>
     <color name="gplus_color_3">#427fed</color>

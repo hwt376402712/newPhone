@@ -40,4 +40,8 @@
     <dimen name="text_md">11.0sp</dimen>
     <dimen name="text_lg">17.0sp</dimen>
     <dimen name="text_xl">125.0sp</dimen>
+
+    <dimen name="bbuton_rounded_corner_radius">5dp</dimen>
+
+
 </resources>

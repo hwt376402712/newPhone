@@ -5,7 +5,6 @@
     android:background="@color/white"
     android:orientation="vertical" >
 
-   
 
     <ProgressBar
         android:id="@+id/progress_bar"

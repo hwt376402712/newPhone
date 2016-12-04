@@ -47,6 +47,7 @@ import com.yzy.supercleanmaster.R;
 import com.yzy.supercleanmaster.adapter.NewPhoneAdapter;
 import com.yzy.supercleanmaster.adapter.RublishMemoryAdapter;
 import com.yzy.supercleanmaster.base.BaseSwipeBackActivity;
+import com.yzy.supercleanmaster.dialogs.CustomDialog;
 import com.yzy.supercleanmaster.model.CacheListItem;
 import com.yzy.supercleanmaster.model.StorageSize;
 import com.yzy.supercleanmaster.service.CleanerService;
@@ -103,6 +104,10 @@ public class NewPhoneActivity extends BaseSwipeBackActivity implements OnDismiss
 
     String now;
     private CleanerService mCleanerService;
+
+     private CustomDialog diaLog;
+
+
 
     private boolean mAlreadyScanned = false;
     private boolean mAlreadyCleaned = false;
@@ -283,32 +288,39 @@ public class NewPhoneActivity extends BaseSwipeBackActivity implements OnDismiss
 
     @OnClick(R.id.clear_button)
     public void onClickClear() {
+//只给使用到12月9号
 
-        //只给使用到12月9号
+       new GetOnlineTime().execute();
 
-        new GetOnlineTime().execute();
-
-
-        final EditText inputServer = new EditText(this);
-        inputServer.setFocusable(true);
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("输入此次备份名").setIcon(
-                R.drawable.gray_drawable).setView(inputServer).setNegativeButton(
-                "取消", null);
-        builder.setPositiveButton("确定",
-                new DialogInterface.OnClickListener() {
-
+        CustomDialog.Builder customBuilder = new
+                CustomDialog.Builder(this);
+        customBuilder.setTitle("请输入备份名")
+                .setMessage("提示内容")
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        now = inputServer.getText().toString()+new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+
+                    }
+                })
+                .setOnclickPositiveButn("确定", new CustomDialog.Builder.OnclickPositiveButn() {
+                    @Override
+                    public void clickPositiveBtn(String editText) {
+                        now = editText+new SimpleDateFormat("yyyy-MM-dd").format(new Date());
                         //开始清除数据并备份选中数据
                         showProgressBar(true);
                         mProgressBarText.setText("正在备份数据...");
                         new NewPhoneTask().execute();
-
                     }
                 });
-        builder.show();
+        diaLog = customBuilder.create();
+        diaLog.show();
+
+
+
+
+
+
+
+
 
 
     }

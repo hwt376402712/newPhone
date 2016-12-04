@@ -94,6 +94,20 @@ public class NewPhoneAdapter extends BaseAdapter implements AdapterView.OnItemCl
             }
         });
 
+        holder.appName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (appInfo.checked) {
+                    appInfo.checked = false;
+                } else {
+                    appInfo.checked = true;
+                }
+                notifyDataSetChanged();
+            }
+        });
+
+
+
 
         return convertView;
     }

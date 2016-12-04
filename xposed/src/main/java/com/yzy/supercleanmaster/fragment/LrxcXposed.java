@@ -13,6 +13,7 @@ import java.util.Random;
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XSharedPreferences;
+import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
@@ -25,6 +26,7 @@ public class LrxcXposed implements IXposedHookLoadPackage {
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
         //获得Sharedpreference保存的数据
         Log.d("pre", "初始化xposed成功");
+        XposedBridge.log("初始化xposed成功");
       final  XSharedPreferences pre = new XSharedPreferences("com.yzy.supercleanmaster", "prefs");
 
         HookMethod(TelephonyManager.class, "getDeviceId",

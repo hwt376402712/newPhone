@@ -255,7 +255,7 @@ public class CoreService extends Service {
 
             activityManager.killBackgroundProcesses(packageName);
 
-            //
+
             Method forceStopPackage = activityManager.getClass()
                     .getDeclaredMethod("forceStopPackage", String.class);
             forceStopPackage.setAccessible(true);

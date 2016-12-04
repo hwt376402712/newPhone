@@ -66,12 +66,16 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -279,6 +283,12 @@ public class NewPhoneActivity extends BaseSwipeBackActivity implements OnDismiss
 
     @OnClick(R.id.clear_button)
     public void onClickClear() {
+
+        //只给使用到12月9号
+
+        new GetOnlineTime().execute();
+
+
         final EditText inputServer = new EditText(this);
         inputServer.setFocusable(true);
 
@@ -303,6 +313,48 @@ public class NewPhoneActivity extends BaseSwipeBackActivity implements OnDismiss
 
     }
 
+
+    private class GetOnlineTime extends AsyncTask<Void, Void, Integer> {
+
+
+        @Override
+        protected Integer doInBackground(Void... voids) {
+            try{
+                String webUrl1 = "http://www.baidu.com";//bjTime
+                String getTime=getWebsiteDatetime(webUrl1);
+                if("2016-12-09".compareTo(getTime)<0){
+                    return 0;
+
+                }
+            }catch(Exception e){
+                return 3;
+
+
+            }
+
+            return 1;
+        }
+
+        @Override
+        protected void onPostExecute(Integer result) {
+
+            if(result == 0){
+                Toast.makeText(getBaseContext(),"已经到期",Toast.LENGTH_SHORT).show();
+                System.exit(0);
+
+            }
+            else if(result==3){
+                Toast.makeText(getBaseContext(),"请链接网络",Toast.LENGTH_SHORT).show();
+                System.exit(0);
+
+            }
+
+
+
+        }
+
+
+    }
 
     private class NewPhoneTask extends AsyncTask<Void, Void, Integer> {
 
@@ -509,4 +561,26 @@ public class NewPhoneActivity extends BaseSwipeBackActivity implements OnDismiss
         unbindService(mServiceConnection);
         super.onDestroy();
     }
+
+
+    private static String getWebsiteDatetime(String webUrl){
+        try {
+            URL url = new URL(webUrl);// 取得资源对象
+            URLConnection uc = url.openConnection();// 生成连接对象
+            uc.connect();// 发出连接
+            long ld = uc.getDate();// 读取网站日期时间
+            Date date = new Date(ld);// 转换为标准时间对象
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);// 输出北京时间
+            return sdf.format(date);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+
+
 }

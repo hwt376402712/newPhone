@@ -56,22 +56,6 @@ public class SplishActivity extends BaseActivity {
         setListener();
 
 
-        SharedPreferences sh = SplishActivity.this.getSharedPreferences("prefs", Context.MODE_WORLD_READABLE);
-        SharedPreferences.Editor pre = sh.edit();
-        pre.putString("imei", "21321312321312312313");
-        pre.putString("imsi", "21321312321312312313");
-        pre.putString("number", "21321312321312312313");
-        pre.putString("simserial", "21321312321312312313");
-        pre.putString("wifimac", "21321312321312312313");
-        pre.putString("bluemac", "21321312321312312313");
-        pre.putString("androidid", "21321312321312312313");
-        pre.putString("serial", "21321312321312312313");
-        pre.putString("brand","");
-
-
-        pre.apply();
-
-
 
 
     }
